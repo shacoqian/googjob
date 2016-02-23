@@ -1,0 +1,38 @@
+              {% if cpageInfo['total_page'] > 1 %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="pagination" style="float:right;">
+
+                          {% if cpageInfo['page'] == 1 %}
+                          <li><a>首页</a></li>
+                          <li><a>&laquo;</a></li>
+                          {% else %}
+                          <li><a href="{{cpageInfo['url']}}1{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">首页</a></li>
+                          <li><a href="{{cpageInfo['url']}}{{cpageInfo['page']-1}}{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">&laquo;</a></li>
+                          {% endif %}
+
+                          {% if cpageInfo['total_page'] <= 10 and cpageInfo['page'] < 6 %}
+                              {% for i in range(1,cpageInfo['total_page']+1) %}
+                              <li {% if cpageInfo['page'] == i %}class="active" {% endif %} ><a href="{{cpageInfo['url']}}{{ i }}{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">{{ i }}</a></li>
+                              {% endfor %}
+                          {% elif cpageInfo['total_page'] - cpageInfo['page'] < 6 %}
+                              {% for i in range(cpageInfo['total_page']-9,cpageInfo['total_page']+1) %}
+                              <li {% if cpageInfo['page'] == i %}class="active" {% endif %} ><a href="{{cpageInfo['url']}}{{ i }}{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">{{ i }}</a></li>
+                              {% endfor %}
+                          {% else %}
+                              {% for i in range(cpageInfo['page']-4,cpageInfo['page']+6) %}
+                              <li {% if cpageInfo['page'] == i %}class="active" {% endif %} ><a href="{{cpageInfo['url']}}{{ i }}{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">{{ i }}</a></li>
+                              {% endfor %}
+                          {% endif %}
+
+                          {% if cpageInfo['total_page'] == cpageInfo['page'] %}
+                          <li><a>&raquo;</a></li>
+                          <li><a>末页</a></li>
+                          {% else %}
+                          <li><a href="{{cpageInfo['url']}}{{cpageInfo['page']+1}}{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">&raquo;</a></li>
+                          <li><a href="{{cpageInfo['url']}}{{cpageInfo['total_page']}}{% if cpageInfo['param'] != '' %}?{{cpageInfo['param']}}{% endif %}">末页</a></li>
+                          {% endif %}
+                        </ul>
+                    </div>
+                </div>
+              {% endif %}

@@ -1,0 +1,91 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="row myinfo border-gary">
+                    <div class="col-xs-3 border-gary">
+                        <img src="/static/image/head.jpg" width="100%">
+                    </div>
+                    <div class="col-xs-9 info">
+                        <p class="title">河边的老牛</p>
+                        <p><a href="">修改资料</a>&nbsp;<a href="">更换头像</a></p>
+                    </div>
+                    <div class="col-xs-12">
+                        <p><a href="">关注(1)</a>&nbsp;&nbsp;<a href="">粉丝(4)</a></p>
+                    </div>
+                </div>
+                <div class="row fans">
+                    <p class="title" >关注</p>
+                    <div class="line"></div>
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                            <div class="col-xs-3">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                            <div class="col-xs-3">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                            <div class="col-xs-3">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                            <div class="col-xs-3">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                            <div class="col-xs-3">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row fans">
+                    <p class="title" >粉丝</p>
+                    <div class="line"></div>
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <p class="text-center">你还没有任何粉丝</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-6">
+                <div class="row" style="border:1px solid #ccc;padding:15px; margin-left:10px;">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li  role="presentation">
+                            <a href="">活动</a>
+                        </li>
+                        <li class="active" role="presentation">
+                            <a href="/users/myplan/">计划</a>
+                        </li>
+                    </ul>
+                    <div class="col-xs-12">
+                        <div class="row activity">
+                            <div class="col-xs-1">
+                                <img src="/static/image/head.jpg" width="100%">
+                            </div>
+                            <div class="col-xs-11">
+                                <p><a href="">河边的老牛</a>创建了计划<a href="">我要成为马克思</a></p>
+                                <p class="ms">我就是这样完成任务的，通过一系列的时间和理论相结合，实现任务和计划就是要这么干</p>
+                                <p class="ms">2个月前</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

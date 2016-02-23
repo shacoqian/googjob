@@ -1,0 +1,38 @@
+              {% if pageInfo['total_page'] > 1 %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="pagination" style="float:right;">
+
+                          {% if pageInfo['page'] == 1 %}
+                          <li><a>首页</a></li>
+                          <li><a>&laquo;</a></li>
+                          {% else %}
+                          <li><a href="{{pageInfo['url']}}1{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">首页</a></li>
+                          <li><a href="{{pageInfo['url']}}{{pageInfo['page']-1}}{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">&laquo;</a></li>
+                          {% endif %}
+
+                          {% if pageInfo['total_page'] <= 10 and pageInfo['page'] < 6 %}
+                              {% for i in range(1,pageInfo['total_page']+1) %}
+                              <li {% if pageInfo['page'] == i %}class="active" {% endif %} ><a href="{{pageInfo['url']}}{{ i }}{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">{{ i }}</a></li>
+                              {% endfor %}
+                          {% elif pageInfo['total_page'] - pageInfo['page'] < 6 %}
+                              {% for i in range(pageInfo['total_page']-9,pageInfo['total_page']+1) %}
+                              <li {% if pageInfo['page'] == i %}class="active" {% endif %} ><a href="{{pageInfo['url']}}{{ i }}{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">{{ i }}</a></li>
+                              {% endfor %}
+                          {% else %}
+                              {% for i in range(pageInfo['page']-4,pageInfo['page']+6) %}
+                              <li {% if pageInfo['page'] == i %}class="active" {% endif %} ><a href="{{pageInfo['url']}}{{ i }}{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">{{ i }}</a></li>
+                              {% endfor %}
+                          {% endif %}
+
+                          {% if pageInfo['total_page'] == pageInfo['page'] %}
+                          <li><a>&raquo;</a></li>
+                          <li><a>末页</a></li>
+                          {% else %}
+                          <li><a href="{{pageInfo['url']}}{{pageInfo['page']+1}}{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">&raquo;</a></li>
+                          <li><a href="{{pageInfo['url']}}{{pageInfo['total_page']}}{% if pageInfo['param'] != '' %}?{{pageInfo['param']}}{% endif %}">末页</a></li>
+                          {% endif %}
+                        </ul>
+                    </div>
+                </div>
+              {% endif %}

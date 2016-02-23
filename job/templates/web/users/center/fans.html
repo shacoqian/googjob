@@ -1,0 +1,44 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            {% include "web/users/center/info.html" %}
+            <div class="col-xs-6">
+                <div class="row main">
+                    <div class="col-xs-12 follow-title">
+                        我的粉丝
+                    </div>
+                    {% for data in datas %}
+                    <div class="row plan-comment" >
+                        <div class="col-xs-2">
+                            <a href="/users/{{ data.user.id }}"><img
+                                     {% if data.user1.pic == None %}
+                                        src="/static/image/head.jpg"
+                                     {% else %}
+                                        src="{{ data.user1.pic }}"
+                                     {% endif %}
+                            width="50px;" height="50px;" ></a>
+                        </div>
+                        <div class="col-xs-4">
+                            <p><a href="/users/{{ data.user.id }}">{{data.user1.nickname}}</a></p>
+                            <p class="ms">{{data.created_time}}</p>
+                        </div>
+                        <div class="col-xs-2 col-xs-offset-4">
+                            <p></p>
+                            <p><a href="/users/{{ data.user1.id }}">访问主页</a></p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% include "web/default/pages.html" %}
+                </div>
+
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

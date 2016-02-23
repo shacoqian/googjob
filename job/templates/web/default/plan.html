@@ -1,0 +1,243 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-50" >
+        <div class="row plan-top">
+            <ul class="list-inline">
+              <li><a href="/">首页</a></li>/
+              <li><a href="/index">计划</a></li>/
+              <li>{{plan.title}}</li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-xs-9 padding-right">
+                <div class="row">
+                   <div class="plan-title">
+                       {{plan.title}}
+                   </div>
+                   <div class="plan-status">
+                       <div class="col-xs-10">
+                           <p class="action">
+                                    <span class="glyphicon glyphicon-user"></span><a href="/users/{{plan.user.id}}"> {{plan.user.nickname}}</a>
+                                    <span class="action-span"><span class="glyphicon glyphicon-eye-open"></span> {%if plan.clicks == None %}0{%else%}{{plan.clicks}}{%endif%}次浏览</span>
+                                    <span class="action-span"><span class="glyphicon glyphicon-arrow-up"></span> {%if plan.plan_comment_num == None %}0{%else%}{{plan.plan_comment_num}}{%endif%}次跟进</span>
+                                    <span class="action-span"><span class="glyphicon glyphicon-comment"></span> {{ plan.comment_num}}次评论</span>
+                                    <span class="action-span"><span class="glyphicon glyphicon-comment"></span> {{ plan.collection_num}}次收藏</span>
+                                    <span class="action-span"><span class="glyphicon glyphicon-time"></span> {{ plan.created_time }}</span>
+                           </p>
+                       </div>
+                       <div class="col-xs-2">
+                           {% if user!=None and user.id != plan.user.id %} <button id="collection" class="btn btn-success" type="button">{% if collection_status %}取消收藏{% else %}点击收藏{% endif %}</button>{% endif %}
+                       </div>
+                   </div>
+                   <div>
+                       {{plan.description}}
+                   </div>
+                   <div>
+                       <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
+                       <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+                   </div>
+                </div>
+                {% if user['id'] == plan.u_id %}
+                <div class="row margin-up-down-10">
+                    <form class="form-horizontal" role="form" onsubmit="return false;">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        <input type="hidden" name="p_id" value="{{plan.id}}">
+                          <div class="form-group">
+                            <div class="col-sm-12">
+                              <textarea class="form-control" maxlength="200" placeholder="跟进你的计划" id="content" name="content" rows="3"></textarea>
+                              <div class="help-block " >
+                                <p class="text-right">你还可以输入200个字</p>
+                              </div>
+                              <button type="submit" id="submit" disabled="disabled" class="btn  btn-success">更新状态</button>
+                            </div>
+                          </div>
+                    </form>
+                </div>
+                <script>
+                    $(function(){
+                        $form = $(".form-horizontal");
+                        $des = $("#content");
+                        $submit = $("#submit")
+                        $des.blur(function(){
+                            if ($.trim($(this).val().length) >= 1) {
+                                $submit.removeAttr('disabled');
+                            } else {
+                                $submit.attr('disabled','disabled');
+                            }
+                            $(this).next('div').find('p').html('你还可以输入'+(200-$(this).val().length)+'个字')
+                        }).keyup(function(){
+                            $(this).triggerHandler("blur");
+                        }).focus(function(){
+                            $(this).triggerHandler("blur");
+                        })
+
+                        $form.submit(function(){
+                            var data = $form.serialize();
+                            $.ajax({
+                                url:'/users/plan_comment/',
+                                data:data,
+                                'type':'POST',
+                                dataType:'json',
+                                success:function(data){
+                                    if (data == 0) {
+                                        $des.val('');
+                                        location.reload();
+                                    } else {
+                                        alert('服务器繁忙，请稍后重试！');
+                                    }
+                                },
+                                error: function(){
+                                    alert('服务器繁忙，请稍后重试！');
+                                },
+
+                            })
+                        })
+                    })
+
+                </script>
+                {% endif %}
+
+                {% if plan_comment != [] %}
+                <h4>计划进展</h4>
+                <div class="row margin-up-down-10  getborder-top">
+                    {% for item in plan_comment %}
+                    <div class="col-xs-12  margin-up-down-10">
+                        <p>{{item.content}}</p>
+                        <p class="ms">{{item.created_time}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% include "web/default/pages.html" %}
+                {% endif %}
+
+                {% if datas != [] %}
+                <h4>评论列表</h4>
+                <div class="row margin-up-down-10 getborder-top">
+                    <div class="col-xs-12 ">
+                        {%- for item in datas -%}
+                            <div class="row  plan-comment">
+                                <div class="col-xs-1">
+                                    <a href="/users/{{item.user.id}}"><img {% if item.user.pic != None %}
+                                            src="{{item.user.pic}}"
+                                        {% else %}
+                                            src="/static/image/head.jpg"
+                                        {% endif %}
+                                            width="53px;" height="53px;"></a>
+                                </div>
+
+                                <div class="col-xs-11" id="{{ item.id }}" >
+                                    <p><strong><a href="#">{{ item.user.nickname }}</a></strong></p>
+                                    <p class="">{{ item.content }}</p>
+                                    <p><a href="javascript:{% if not user%}void(){% else %}comment({{ item.id }}){% endif %};">回复</a>&nbsp;&nbsp;&nbsp;{{ item.created_time }}</p>
+                                </div>
+                            </div>
+                            {%- endfor -%}
+
+                    </div>
+                    {% include "web/default/pages2.html" %}
+                </div>
+                {% endif %}
+
+                <h4>发表评论</h4>
+                <div class="row margin-up-down-10 up-down-10 getborder-top">
+                    <form class="form2" role="form" onsubmit="return false;">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        <input type="hidden" name="p_id" value="{{plan.id}}">
+                          <div class="form-group">
+                            <div class="col-sm-12">
+                              {% if user['id'] is not defined %}
+                                   <p class="text-right"><a href="/login">登录</a>&nbsp;<a href="/register">注册</a></p>
+                              {% endif %}
+                              <textarea class="form-control" {% if user['id'] is not defined %} disabled="disabled" {% endif %} maxlength="200" placeholder="发表你的评论吧" id="content1" name="content" rows="3"></textarea>
+                              <div class="help-block " >
+                                <p class="text-right">你还可以输入200个字</p>
+                              </div>
+                             {% if user['id'] is defined %}
+                              <button type="submit" id="submit1" disabled="disabled" class="btn  btn-success">发表评论</button>
+                             {% endif %}
+                            </div>
+                          </div>
+                    </form>
+                </div>
+
+                <script>
+                    $(function(){
+                        $form1 = $(".form2");
+                        $des1 = $("#content1");
+                        $submit1 = $("#submit1");
+
+                        $des1.blur(function(){
+                            if ($.trim($(this).val().length) >= 1) {
+                                $submit1.removeAttr('disabled');
+                            } else {
+                                $submit1.attr('disabled','disabled');
+                            }
+                            $(this).next('div').find('p').html('你还可以输入'+(200-$(this).val().length)+'个字')
+                        }).keyup(function(){
+                            $(this).triggerHandler("blur");
+                        }).focus(function(){
+                            $(this).triggerHandler("blur");
+                        })
+
+                        $form1.submit(function(){
+                            var data1 = $form1.serialize();
+                            $.ajax({
+                                url:'/users/comment/',
+                                data:data1,
+                                'type':'POST',
+                                dataType:'json',
+                                success:function(data){
+                                    if (data == 0) {
+                                        $des1.val('');
+                                        location.reload();
+                                    } else {
+                                        alert('服务器繁忙，请稍后重试！');
+                                    }
+                                },
+                                error: function(){
+                                    alert('服务器繁忙，请稍后重试！');
+                                },
+
+                            })
+                        })
+                    })
+
+                </script>
+
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+</div>
+<script>
+    function comment(val) {
+        var name = $("#"+val+" p").eq(0)
+            .find('strong > a').html();
+        $content = $("#content1");
+        $content.focus();
+        $content.val('@'+name+'\n');
+    }
+    $(function(){
+        var $collection = $("#collection");
+        $collection.click(function(){
+            if ('{{user}}' == 'None') {
+                location.href='/login';
+                return false;
+            }
+            $.get('/users/collection/{{user.id}}/{{plan.id}}/',function(data){
+                if (data == 0) {
+                    if ($collection.html() == '点击收藏') {
+                        $collection.html('取消收藏');
+                    } else {
+                        $collection.html('点击收藏');
+                    }
+                } else {
+                    alert('服务器繁忙，请稍后重试！');
+                }
+            })
+        })
+    })
+</script>
+
+
+{% endblock %}

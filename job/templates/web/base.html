@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>计划网-{{title}}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- Bootstrap -->
+        <link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="/static/css/style.css" rel="stylesheet" >
+        <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="/static/js/jquery.placeholder.js"></script>
+    </head>
+    <body>
+        <header class="header-nav  navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="navbar-header col-xs-2">
+                      <a href="/" class="navbar-brand">计划网</a>
+                  </div>
+                  <div class="col-xs-10">
+                      <nav class="navbar-collapse" role="navigation">
+                          <div class="row">
+                              <div class="col-xs-4">
+                                  <ul class="nav navbar-nav">
+                                    <li>
+                                        <a href="/">首页</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/index/">计划</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/say/">说说</a>
+                                    </li>
+
+                                  </ul>
+                              </div>
+                              <div class="col-xs-5">
+
+
+                                      <div class="col-xs-12">
+                                          <form class="navbar-form form-inline" action="/index" role="form">
+                                                <input class="form-control" style="width:100%;" type="text" name="search" value="{{search}}" placeholder="请输入你关心的计划" />
+
+                                                <button class="btn-search" type="submit">搜索</button>
+                                          </form>
+                                      </div>
+
+                              </div>
+                              <div class="col-xs-3">
+                                  <ul class="nav navbar-nav navbar-right">
+                                    {% if not user %}
+                                    <li><a href="/login" >登 录</a></li>
+                                    <li><a href="/register" >注 册</a></li>
+                                    {% else %}
+                                    <li><a href="/users" >{{ user.nickname }}</a></li>
+                                    <li><a href="/login_out" >退 出</a></li>
+                                    {% endif %}
+                                  </ul>
+                              </div>
+                        </div>
+                      </nav>
+                </div>
+                </div>
+            </div>
+        </header>
+        {% block content %}
+        {% endblock %}
+
+        {% include "web/footer.html" %}
+    </body>
+</html>

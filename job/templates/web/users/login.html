@@ -1,0 +1,151 @@
+{% extends "web/base.html" %}
+{% block content %}
+        <div class="width-100 margin-top-50">
+            <div class="container-fluid up-down-50">
+                <h2 class="text-center up-down-10">登 录</h2>
+
+                <div class="row">
+                    <div class="col-xs-2 ">
+                    </div>
+
+                    <div class="col-xs-8 up-down-50">
+                          <div class="row">
+                              <form class="form-horizontal" role="form" onsubmit="return false;">
+                                  <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                                  <div class="form-group">
+                                    <label for="email" class="col-sm-2 control-label">邮 箱</label>
+                                    <div class="col-sm-7 col-sm-offset-1">
+                                      <input type="email" name="email" maxlength="40" class="form-control" id="email" placeholder="请输入您的email">
+                                      <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="form-group">
+                                    <label for="passwd" class="col-sm-2 control-label">密 码</label>
+                                    <div class="col-sm-7 col-sm-offset-1">
+                                      <input type="password" name="passwd"  maxlength="40" class="form-control" id="passwd" placeholder="请输入您的密码">
+                                      <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-8">
+                                      <button type="submit" class="btn  btn-success">登 录</button>
+                                    </div>
+                                  </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-xs-2  text-center">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function(){
+                var $form = $(".form-horizontal"),
+                    $input = $form.find('input:not(:hidden)'),
+                    $reg_email = /^.{6,40}$/,
+                    $reg_passwd = /^.{6,40}$/,
+                    $submit = $form.find('input[type=submit]'),
+                    email_error = '邮箱的长度必须为6-40个长度',
+                    passwd_error = '密码的长度必须为6-40个长度',
+                    email_check_error = '请输入正确的邮箱格式';
+
+                $input.blur(function(){
+                    var $id = $(this).attr('id');
+                    if ( $id == 'email' ) {
+                        if ( ! check_input ($reg_email, $(this))) {
+                            show_error($(this),email_error );
+                        } else {
+                            hide_error($(this));
+                        }
+                    } else if ($id == 'passwd') {
+                        if ( ! check_input ($reg_passwd, $(this))) {
+                            show_error($(this),passwd_error );
+                        } else {
+                            hide_error($(this));
+                        }
+                    }
+
+
+                }).keyup(function(){
+                    $(this).triggerHandler("blur");
+                }).focus(function(){
+                    $(this).triggerHandler("blur");
+                })
+
+                function show_error(obj, error_html) {
+
+                    var errorObj = obj.next('div');
+                    errorObj.removeClass('hide');
+                    errorObj.find('p').html(error_html);
+                    errorObj.parent().addClass('has-error');
+                }
+
+                function hide_error(obj) {
+                    var errorObj = obj.next('div');
+                    errorObj.addClass('hide');
+                    errorObj.find('p').html('');
+                    errorObj.parent().removeClass('has-error');
+                }
+
+
+                function check_input(reg,input) {
+                    if ( ! reg.test( input.val() ) ) {
+                        return false;
+                    }
+                    return true;
+                }
+
+                $form.submit(function(){
+                    var status = 1;
+                    $input.each(function(){
+                        if ($.trim($(this).val()) == '') {
+                            $(this).focus();
+                            status = 0;
+                        } else {
+                            if ($.trim($(this).next('div').find('p').html()) != '') {
+                                $(this).focus();
+                                status = 0;
+                            }
+                        }
+                    })
+
+                    if (status == 1) {
+                        $submit.attr('disabled');
+                        data = $form.serialize();
+
+                        $.ajax({
+                            url:'/login',
+                            data:data,
+                            type:'POST',
+                            dataType:'json',
+                            success:function(data){
+                                if (data.status == 0) {
+                                    location.href="{{next}}";
+                                } else if (data.status == 1) {
+                                    show_error($("input[name=email]"), data.message);
+                                    $submit.removeAttr('disabled');
+                                }
+                            },
+                            error:function(){
+                                alert('服务器繁忙，请稍后重试！');
+                            },
+                        })
+                    }
+
+                })
+            })
+        </script>
+{% endblock %}

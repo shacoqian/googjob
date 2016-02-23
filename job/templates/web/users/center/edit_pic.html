@@ -1,0 +1,47 @@
+{% extends "web/base.html" %}
+{% block content %}
+<!--<script src="/static/plugs/uploadify/jquery.uploadify.js"></script>-->
+<!--<link href="/static/plugs/uploadify/uploadify.css" rel="stylesheet" >-->
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            {% include "web/users/center/info.html" %}
+            <div class="col-xs-6">
+                <div class="row main">
+                    <div class="col-xs-12">
+                        <p class="title">修改头像</p>
+                    </div>
+                </div>
+                <div class="row main">
+                    <form class="form-horizontal" method="POST" target="hidden_frame" enctype="multipart/form-data" role="form" >
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        <table class="table">
+                            <tr>
+                                <td>图片文件：</td>
+                                <td>
+                                     <input type="file" id="pic" name="pic" >
+
+                                </td>
+                                 <iframe name="hidden_frame" id="hidden_frame" style="display:none"></iframe>
+                                <td >
+                                    <button type="submit" class="btn  btn-success">上传头像</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    <script>
+                        function callback(code, msg) {
+                           alert(msg);
+                           location.href="/users/editpic/";
+                        }
+                    </script>
+                </div>
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

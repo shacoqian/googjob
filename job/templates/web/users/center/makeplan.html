@@ -1,0 +1,191 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            {% include "web/users/center/info.html" %}
+            <div class="col-xs-6">
+                <div class="row main">
+                    <div class="col-xs-12">
+                        <p class="title">创建计划</p>
+                    </div>
+                </div>
+                <div class="row main">
+                    <form class="form-horizontal" role="form" onsubmit="return false;">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        <table class="table">
+                            <tr>
+                                <td width="20%">计划名<font style="color:red;">*</font></td>
+                                <td>
+                                     <input type="text" class="form-control" id="title" name="title" placeholder="给你的计划取个名字吧">
+                                    <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%">描述<font style="color:red;">*</font></td>
+                                <td>
+                                    <textarea class="form-control" placeholder="描述清楚你的计划，理清要实现的计划的步骤" id="description" name="description" rows="3"></textarea>
+                                    <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%">监督人邮箱</td>
+                                <td>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="设置监督人，你的计划进展时时通知他/她">
+                                    <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-right">
+                                    <button type="submit" class="btn  btn-success">提交计划</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                     <script>
+                    $(function(){
+                        var $form = $(".form-horizontal"),
+                            $input = $form.find('input:not(:hidden)'),
+                            $textarea = $form.find('textarea'),
+                            $reg_email = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
+                            $reg_title = /^.{6,100}$/,
+                            $reg_description = /^.{6,1500}$/,
+                            $submit = $form.find('input[type=submit]'),
+                            email_error = '请输入正确的邮件格式',
+                            title_error = '标题的长度必须为6-100个长度',
+                            description_error = '描述的长度必须为6-1500个长度';
+
+                        $textarea.blur(function(){
+                            if ( ! check_input ($reg_description, $(this))) {
+                                show_error($(this),description_error );
+                            } else {
+                                hide_error($(this));
+                            }
+                        }).keyup(function(){
+                            $(this).triggerHandler("blur");
+                        }).focus(function(){
+                            $(this).triggerHandler("blur");
+                        })
+
+
+                        $input.blur(function(){
+                            var $id = $(this).attr('id');
+                            if ($id == 'title') {
+                                if ( ! check_input ($reg_title, $(this))) {
+                                    show_error($(this),title_error );
+                                } else {
+                                    hide_error($(this));
+                                }
+                            } else if ( $id == 'email' ) {
+                                //alert($(this).val());
+                                if ( ! $.trim($(this).val()) == '') {
+                                    if ( ! check_input ($reg_email, $(this))) {
+                                        show_error($(this),email_error );
+                                    } else {
+                                        hide_error($(this));
+                                    }
+                                } else {
+                                    hide_error($(this));
+                                }
+                            }
+
+
+                        }).keyup(function(){
+                            $(this).triggerHandler("blur");
+                        }).focus(function(){
+                            $(this).triggerHandler("blur");
+                        })
+
+                        function show_error(obj, error_html) {
+
+                            var errorObj = obj.next('div');
+                            errorObj.removeClass('hide');
+                            errorObj.find('p').html(error_html);
+                            errorObj.parent().addClass('has-error');
+                        }
+
+                        function hide_error(obj) {
+                            var errorObj = obj.next('div');
+                            errorObj.addClass('hide');
+                            errorObj.find('p').html('');
+                            errorObj.parent().removeClass('has-error');
+                        }
+
+
+                        function check_input(reg,input) {
+                            if ( ! reg.test( input.val() ) ) {
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        $form.submit(function(){
+                            var status = 1;
+                            $input.each(function(){
+                                if ($.trim($(this).val()) == '' && $(this).attr('id') != 'email') {
+                                    $(this).focus();
+                                    status = 0;
+                                } else {
+                                    if ($.trim($(this).next('div').find('p').html()) != '') {
+                                        $(this).focus();
+                                        status = 0;
+                                    }
+                                }
+                            })
+
+                            $textarea.each(function(){
+                                if ($.trim($(this).val()) == '') {
+                                    $(this).focus();
+                                    status = 0;
+                                } else {
+                                    if ($.trim($(this).next('div').find('p').html()) != '') {
+                                        $(this).focus();
+                                        status = 0;
+                                    }
+                                }
+                            })
+
+                            if (status == 1) {
+
+                                $submit.attr('disabled');
+                                data = $form.serialize();
+
+                                $.ajax({
+                                    url:'/users/makeplan',
+                                    data:data,
+                                    type:'POST',
+                                    dataType:'json',
+                                    success:function(data){
+                                        if (data.status == 0) {
+                                            location.href=data.url;
+                                        } else {
+                                            $submit.removeAttr('disabled');
+                                            alert('未知错误！')
+                                        }
+                                    },
+                                    error:function(){
+                                        alert('服务器繁忙，请稍后重试！');
+                                    },
+                                })
+                            }
+
+                        })
+                    })
+                </script>
+
+                </div>
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

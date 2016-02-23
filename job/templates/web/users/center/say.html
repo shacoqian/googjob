@@ -1,0 +1,56 @@
+<div class="row main">
+    <form class="form-horizontal" role="form" onsubmit="return false;">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+          <div class="form-group">
+            <div class="col-sm-12">
+              <textarea class="form-control" maxlength="200" placeholder="说点什么吧" id="content" name="content" rows="3"></textarea>
+              <div class="help-block " >
+                <p class="text-right">你还可以输入200个字</p>
+              </div>
+              <button type="submit" id="submit" disabled="disabled" class="btn  btn-success">发布说说</button>
+            </div>
+          </div>
+    </form>
+    <script>
+    $(function(){
+        $form = $(".form-horizontal");
+        $des = $("#content");
+        $submit = $("#submit")
+        $des.blur(function(){
+            if ($.trim($(this).val().length) > 0) {
+                $submit.removeAttr('disabled');
+            } else {
+                $submit.attr('disabled','disabled');
+            }
+            $(this).next('div').find('p').html('你还可以输入'+(200-$(this).val().length)+'个字')
+        }).keyup(function(){
+            $(this).triggerHandler("blur");
+        }).focus(function(){
+            $(this).triggerHandler("blur");
+        })
+
+        $form.submit(function(){
+            var data = $form.serialize();
+            $.ajax({
+                url:'/users/dosay/',
+                data:data,
+                'type':'POST',
+                dataType:'json',
+                success:function(data){
+                    if (data == 0) {
+                        $des.val('');
+                        location.reload();
+                    } else {
+                        alert('服务器繁忙，请稍后重试！');
+                    }
+                },
+                error: function(){
+                    alert('服务器繁忙，请稍后重试！');
+                },
+
+            })
+        })
+    })
+
+    </script>
+</div>

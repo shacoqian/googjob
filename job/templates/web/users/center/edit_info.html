@@ -1,0 +1,212 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            {% include "web/users/center/info.html" %}
+            <div class="col-xs-6">
+                <div class="row main">
+                    <div class="col-xs-12">
+                        <p class="title">修改头像</p>
+                    </div>
+                </div>
+                <div class="row main">
+                    <form class="form-horizontal" id="pic" method="POST" target="hidden_frame" enctype="multipart/form-data" role="form" action="/users/editpic/" onsubmit="return checkFile();">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        <table class="table">
+                            <tr>
+                                <td>图片文件：</td>
+                                <td>
+                                     <input type="file" id="pic" name="pic" >
+
+                                </td>
+                                 <iframe name="hidden_frame" id="hidden_frame" class="hide"></iframe>
+                                <td >
+                                    <button type="submit" class="btn  btn-success">上传头像</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                    <script>
+                        function callback(code, msg) {
+                           alert(msg);
+                           location.href="/users/editinfo/";
+                        }
+
+                        function checkFile() {
+                            $form = $("#pic");
+                            $pic = $form.find("input[type=file]");
+                            if ($.trim($pic.val()) == '') {
+                                alert('请选择头像文件！');
+                                return false;
+                            }
+                            return true;
+                        }
+                        /*
+                        $(function(){
+                            $form = $("#pic");
+                            $pic = $form.find("input[type=file]");
+                            $form.submit(function(){
+                                if ($.trim($pic.val()) == '') {
+                                    alert('请选择头像文件！');
+                                    return false;
+                                }
+                                alert(11);
+                                return true;
+                            })
+                        })
+                        */
+                    </script>
+                </div>
+
+                <div class="row main">
+                    <div class="col-xs-12">
+                        <p class="title">详细信息</p>
+                    </div>
+                </div>
+
+                <div class="row main">
+                    <form class="form-horizontal" id="info-form" role="form" onsubmit="return false;">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        <div class="form-group">
+                            <p class="col-xs-2 control-label">邮箱：</p>
+                            <div class="col-xs-9 col-xs-offset-1">
+                                <p>{{ userInfo['email'] }}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p for="nickname" class="col-xs-2 control-label">昵称：</p>
+                            <div class="col-xs-9 col-xs-offset-1">
+                                <input type="text" class="form-control" name="nickname" maxlength="11" id="nickname" placeholder="昵称" value="{% if userInfo['nickname'] != None %}{{ userInfo['nickname'] }}{% endif %}">
+                                <div class="help-block hide" >
+                                    <p style="color:red;" ></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p for="realname" class="col-xs-2 control-label">真实姓名：</p>
+                            <div class="col-xs-9 col-xs-offset-1">
+                                <input type="text" class="form-control" name="realname" maxlength="11" id="realname" placeholder="真实姓名" value="{% if userInfo['realname'] != None %}{{ userInfo['realname'] }}{% endif %}">
+                                <div class="help-block hide" >
+                                    <p style="color:red;" ></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p for="qq" class="col-xs-2 control-label">QQ：</p>
+                            <div class="col-xs-9 col-xs-offset-1">
+                                <input type="text" class="form-control" name="qq" id="qq" maxlength="10" placeholder="QQ" value="{% if userInfo['qq'] != None %}{{ userInfo['qq'] }}{% endif %}">
+                                <div class="help-block hide" >
+                                    <p style="color:red;" ></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p for="phone" class="col-xs-2 control-label">手机：</p>
+                            <div class="col-xs-9 col-xs-offset-1">
+                                <input type="text" class="form-control" name="phone" maxlength="11" id="phone" placeholder="手机" value="{% if userInfo['phone'] != None %}{{ userInfo['phone'] }}{% endif %}" />
+                                <div class="help-block hide" >
+                                    <p style="color:red;" ></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-offset-9 col-xs-3">
+                              <button type="submit" class="btn btn-success info-button">更新信息</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script>
+                    $(function(){
+                        var $form = $("#info-form"),
+                            $nickname = $("#nickname"),
+                            $realname = $("#realname"),
+                            $qq = $("#qq"),
+                            $phone = $("#phone"),
+                            $reg_qq = /^\d{5,10}$/,
+                            $reg_phone = /^0?1\d\d{9}$/;
+
+                        function show_error(obj, error_html) {
+                            var errorObj = obj.next('div');
+                            errorObj.removeClass('hide');
+                            errorObj.find('p').html(error_html);
+                            errorObj.parent().addClass('has-error');
+                        }
+
+                        function hide_error(obj) {
+                            var errorObj = obj.next('div');
+                            errorObj.addClass('hide');
+                            errorObj.find('p').html('');
+                            errorObj.parent().removeClass('has-error');
+                        }
+
+
+                        function check_input(reg,input) {
+                            if ( ! reg.test( input.val() ) ) {
+                                return false;
+                            }
+                            return true;
+                        }
+
+                        function checkEmpty(obj) {
+                            if (obj.val() == '' || $.trim(obj.val()) == '') {
+                                return true;
+                            }
+                            return false;
+                        }
+
+                        $form.submit(function(){
+                            if ( ! checkEmpty($qq)) {
+                                if ( ! check_input($reg_qq, $qq) ) {
+                                    show_error($qq,'请输入正确的QQ！');
+                                    return false;
+                                } else {
+                                    hide_error($qq);
+                                }
+                            }
+
+                            if ( ! checkEmpty($phone)) {
+                                if ( !check_input($reg_phone, $phone) ) {
+                                    show_error($phone,'请输入正确的手机！');
+                                    return false;
+                                } else {
+                                    hide_error($phone);
+                                }
+                            }
+                            data = $form.serialize()
+                            $.ajax({
+                            url:'/users/editinfo/',
+                            data:data,
+                            type:'POST',
+                            dataType:'json',
+                            success:function(data){
+                                if (data == 0) {
+                                    location.reload();
+                                } else {
+                                    alert('服务器繁忙，请稍后重试!');
+                                }
+                            },
+                            error:function(){
+                                alert('服务器繁忙，请稍后重试！');
+                            },
+                        })
+
+                        })
+                    })
+                    </script>
+
+                </div>
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

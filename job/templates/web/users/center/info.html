@@ -1,0 +1,102 @@
+<div class="col-xs-3">
+    <div class="row myinfo border-gary">
+        <div class="col-xs-3 border-gary">
+            <img
+                {% if userInfo.pic != None %}
+                    src="{{userInfo.pic}}"
+                {% else %}
+                    src="/static/image/head.jpg"
+                {% endif %}
+                    width="100%" height="53px;">
+        </div>
+        <div class="col-xs-9 info">
+            <p class="title">{{ userInfo.nickname }}</p>
+            {% if user.id == userInfo['id'] %}
+            <p><a href="/users/editinfo/">修改资料</a>&nbsp;<a href="/users/editpasswd/">修改密码</a></p>
+            {% elif userInfo['follow_status'] == 1 %}
+            <p id="follow"> 已关注 | <a href="javascript:follow(0);">取消</a></p>
+            {% else %}
+            <p id="follow"><a href="javascript:follow(1);">关注此人</a></p>
+            {% endif %}
+
+            <script>
+                function follow(flag) {
+                    if (flag) {
+                        status = 1;
+                    } else {
+                        status = 0;
+                    }
+
+                    if ('{{user}}' == 'None') {
+                        location.href='/login';
+                    }
+                    $.get('/users/actation/{{userInfo['id']}}/'+status+'/', function(result){
+                        if (result == 0) {
+                            var html = "已关注 | <a href=\"javascript:follow(0);\">取消</a>";
+                            $("#follow").html(html);
+                        } else if(result == 2 ) {
+                            alert('您已经关注过此人！');
+                        } else if(result == 3 ) {
+                            var html = "<a href=\"javascript:follow(1);\">关注此人</a>";
+                            $("#follow").html(html);
+                        } else {
+                            alert('服务器繁忙，请稍后重试！');
+                        }
+                    })
+                }
+            </script>
+        </div>
+
+        <div class="col-xs-12">
+            <p><a href="/users/follow/{{ userInfo['id'] }}">关注({{userInfo['follow']['count']}})</a>&nbsp;&nbsp;<a href="/users/fans/{{ userInfo['id'] }}">粉丝({{userInfo['fans']['count']}})</a></p>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <h3 class="panel-title">关注</h3>
+        </div>
+        <div class="panel-body">
+             <div class="row">
+                    {% for item in userInfo['follow']['follow'] %}
+                    <div class="col-xs-3 up-down-10">
+                        <a href="/users/{{item.user.id}}"><img title="{{item.user.nickname}}"
+                            {% if item.user.pic == None %}
+                                src="/static/image/head.jpg"
+                            {% else %}
+                                src="{{item.user.pic}}"
+                            {% endif %}
+                        width="50px;" height="50px;"></a>
+                    </div>
+                    {% else %}
+                    <p class="text-center">没有关注任何人</p>
+                    {% endfor %}
+             </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <h3 class="panel-title">粉丝</h3>
+        </div>
+        <div class="panel-body">
+             <div class="row">
+                {% for item in userInfo['fans']['fans'] %}
+                <div class="col-xs-3 up-down-10">
+                    <a href="/users/{{item.user1.id}}"><img title="{{item.user1.nickname}}"
+                        {% if item.user1.pic == None %}
+                            src="/static/image/head.jpg"
+                        {% else %}
+                            src="{{item.user1.pic}}"
+                        {% endif %}
+                    width="50px;" height="50px;"></a>
+                </div>
+                {% else %}
+                <p class="text-center">还没有任何粉丝</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+</div>

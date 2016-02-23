@@ -1,0 +1,81 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            {% include "web/users/center/info.html" %}
+            <div class="col-xs-6">
+                {% if user and user.id == userInfo['id'] %}
+                    {% include "web/users/center/say.html" %}
+                {% endif %}
+                <div class="row main">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li>
+                            <a href="{{ userInfo['u_url'] }}">活动</a>
+                        </li>
+                        <li class="active">
+                            <a href="/users/myplan/{{userInfo['id']}}">计划</a>
+                        </li>
+                        <li>
+                            <a href="/users/mysay/{{userInfo['id']}}/">说说</a>
+                        </li>
+                         <li>
+                            <a href="/users/mycollection/{{userInfo['id']}}/">收藏</a>
+                        </li>
+                    </ul>
+                    <div class="col-xs-12">
+                        {% for data in datas %}
+                        <div class="row activity">
+                            <div class="col-xs-1">
+                                <img
+                                     {% if userInfo['pic'] == None %}
+                                        src="/static/image/head.jpg"
+                                     {% else %}
+                                        src="{{ userInfo['pic'] }}"
+                                     {% endif %}
+                                width="100%" height="39px;" >
+                            </div>
+                            <div class="col-xs-10 col-xs-offset-1">
+                                <p><a href="/plan/{{data.id}}">{{ data['title'] }}</a></p>
+                                <p>{{ data['description'] }}</p>
+                                {% if user.id == userInfo['id'] %}
+                                <p>监督人：{{data.supervise.email}}</p>
+                                {% endif %}
+                                <p class="action">
+                                    <span class="glyphicon glyphicon-arrow-up"></span> {%if data.plan_comment_num == None %}0{%else%}{{data.plan_comment_num}}{%endif%}次跟进
+                                    <span class="action-span"><span class="glyphicon glyphicon-comment"></span> {{ data.comment_num}}次评论</span>
+                                    <span class="action-span"><span class="glyphicon glyphicon-time"></span> {{ data.created_time }}</span>
+                                    {% if user.id == userInfo.id %}
+                                    <span class="action-span" title="删除"><a href="javascript:delplan({{data.id}});"><span class="glyphicon glyphicon-trash"></span></a></span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <script>
+                           function delplan(val) {
+                                if(confirm("是否删除此条说说？\n删除后将无法恢复！")){
+                                    $.get('/users/delplan/{{user.id}}/'+val+'/',function(data){
+                                        if (data == 0) {
+                                            alert('删除成功！');
+                                            location.reload();
+                                        } else {
+                                            alert('网络错误！请稍后重试！');
+                                        }
+                                    })
+                                }
+                           }
+                        </script>
+                        {% include "web/default/pages.html" %}
+                    </div>
+
+                </div>
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

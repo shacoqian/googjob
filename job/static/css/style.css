@@ -1,0 +1,287 @@
+body {
+ font-family: "微软雅黑";
+ font-weight: normal;
+}
+
+body a {
+    color:#008e59;
+}
+
+body a:hover {
+    color:#006666;
+}
+.header-nav {
+    border-bottom: 1px solid #ccc;
+    background-color:#FCFCFC;
+}
+
+.index-reg {
+    padding:70px 0;
+}
+
+.index-des {
+    padding:50px 20px;
+}
+
+.big-title {
+    font-size:70px;
+    color:#fff;
+    font-weight:800;
+}
+
+.big-des {
+    padding-left:50px;
+    font-size:50px;
+    color:#fff;
+    font-weight:500;
+}
+
+.plan-top {
+    margin-bottom:20px;
+    background-color: #f7f7f9;
+    padding:0 20px;
+}
+
+.plan-top ul, li {
+    color:#666666;
+}
+
+.page-header h1 {
+    font-size: 26px;
+}
+.page-header, .page-header h1 {
+    margin-top: 0;
+}
+.page-header {
+    padding-bottom: 8px;
+}
+.page-header h1 .nav {
+    margin-top:3px;
+    border-bottom: medium none;
+    float: right;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+
+.plan-title {
+    font-size:25px;
+    line-height:35px;
+    padding-bottom:20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom:20px;
+}
+
+.follow-title {
+    font-size:20px;
+    line-height:20px;
+    padding-bottom:20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom:20px;
+}
+
+.plan-status {
+    padding-bottom:55px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom:20px;
+}
+
+.plan-comment {
+    padding:10px 0px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.say-list {
+    padding:15px 0;
+    border-bottom: 1px dashed #ccc;
+}
+
+.action {
+    color: #999;
+}
+.action-span {
+    width:auto;
+    padding:2px 2px;
+}
+
+.padding-right {
+    padding-right:15px;
+}
+
+.right {
+    margin-left:15px;
+}
+
+.container {
+    max-width:1000px;
+}
+
+.container-fluid {
+    max-width:1000px;
+}
+
+.back-gray {
+    background-color:#e9eaea;   
+}
+
+.header-nav a {
+    color:#444;    
+}
+
+.margin-top-50 {
+    margin-top:50px;
+}
+
+.content-top {
+    background-image:url(../image/banner.jpg);
+}
+
+.width-100 {
+    width:100%;    
+}
+
+.width-70 {
+    width:70%;
+}
+
+.height-200 {
+    height:200px;
+}
+
+.up-down-50 {
+    padding:50px 0;    
+}
+
+.up-down-10 {
+    padding:10px 0;    
+}
+
+.margin-up-down-10 {
+    margin:10px 0;
+}
+
+.down-100 {
+    margin-bottom:100px;    
+}
+
+.getborder {
+    border: 1px solid #ccc;    
+}
+
+.description {
+    background-color: #f7f7f9;
+    padding:20px;
+}
+
+.getborder-top {
+    border-top: 1px solid #ccc;
+}
+
+
+.btn-search {
+    background: url("../image/search.png?lONep") no-repeat scroll center center rgba(0, 0, 0, 0);
+    border: 0 none;
+    height: 37px;
+    position: absolute;
+    right: 30px;
+    text-indent: -9999em;
+    top: 5px;
+    width: 24px;
+}
+
+
+.p-line-height-30 {
+    line-height:30px;
+}
+
+.bigfont-30 {
+    font-size:30px;    
+}
+
+.hide {
+    display:none;
+}
+
+.planlist {
+    padding-top:10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.comment-counts {
+    background:#40aa53;
+    height:25px;
+    line-height:25px;
+}
+
+.status-counts {
+    background:#ddd;
+    height:25px;
+    line-height:25px;
+}
+
+
+.ms {
+    font-size:12px;
+    color:#999;
+}
+
+.makeplan {
+    margin-bottom:20px;
+}
+
+.myinfo {
+    padding:15px;
+    margin-bottom:20px;
+}
+
+.myinfo .info {
+    padding-left:10px;
+}
+
+.myinfo .info .title {
+    font-size:20px;
+    line-height:20px;
+}
+
+.border-gary {
+    border:1px solid #ccc;
+}
+
+.fans {
+    border:1px solid #ccc;
+    padding:15px;
+    margin-top:10px;
+}
+.title {
+    font-size:20px;
+    line-height:20px;
+}
+
+.line {
+    border-top:2px solid #ccc;
+    margin:0px -15px;
+    height:2px;
+}
+
+.main {
+    border:1px solid #ccc;
+    padding:10px;
+    margin-left:10px;
+    margin-bottom:20px;
+}
+
+
+.main .activity {
+    border-bottom:1px solid #ccc;
+    padding-top:10px;
+}
+
+.info-button {
+    margin-left:32px;
+}
+
+.footer {
+    padding-top:50px;
+    background-color:#FCFCFC;
+    border-top: 1px solid #ccc;
+}

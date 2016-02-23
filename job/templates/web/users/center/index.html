@@ -1,0 +1,75 @@
+{% extends "web/base.html" %}
+{% block content %}
+<div class="width-100 margin-top-50">
+    <div class="container-fluid up-down-10">
+        <div class="page-header">
+            <h4><a href="/users/{{userInfo['id']}}">{{userInfo['nickname']}}的空间</a></h4>
+        </div>
+        <div class="row">
+            {% include "web/users/center/info.html" %}
+            <div class="col-xs-6">
+                {% if user and user.id == userInfo['id'] %}
+                    {% include "web/users/center/say.html" %}
+                {% endif %}
+                <div class="row main">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active">
+                            <a href="/users/{{userInfo['id']}}">活动</a>
+                        </li>
+                        <li>
+                            <a href="/users/myplan/{{userInfo['id']}}">计划</a>
+                        </li>
+                        <li>
+                            <a href="/users/mysay/{{userInfo['id']}}/">说说</a>
+                        </li>
+                        <li>
+                            <a href="/users/mycollection/{{userInfo['id']}}/">收藏</a>
+                        </li>
+                    </ul>
+                    <div class="col-xs-12">
+                        {% for data in datas %}
+                        <div class="row activity">
+                            <div class="col-xs-1">
+                                <img
+                                     {% if userInfo['pic'] == None %}
+                                        src="/static/image/head.jpg"
+                                     {% else %}
+                                        src="{{ userInfo['pic'] }}"
+                                     {% endif %}
+                                width="100%" height="39px;" >
+                            </div>
+                            <div class="col-xs-10 col-xs-offset-1">
+                                {% if data.type == 1 %}
+                                <p><a href="{{ userInfo['u_url'] }}">{{ userInfo['nickname'] }}</a>&nbsp;创建了计划:<a href="/plan/{{data.plan.id}}">{{ data.plan.title }}</a></p>
+                                <p class="ms">{{ data.plan.description }}</p>
+                                <p class="ms">{{ data.plan.created_time }}</p>
+                                {% elif data.type == 2 %}
+                                <p><a href="{{ userInfo['u_url'] }}">{{ userInfo['nickname'] }}</a>&nbsp;跟进了计划:<a href="/plan/{{data.plan.id}}">{{ data.plan.title }}</a></p>
+                                <p class="ms">{{ data.plan_comment.content }}</p>
+                                <p class="ms">{{ data.plan_comment.created_time }}</p>
+                                {% elif data.type == 3 %}
+                                <p><a href="{{ userInfo['u_url'] }}">{{ userInfo['nickname'] }}</a>&nbsp;发布了评论:<a href="/plan/{{data.plan.id}}">{{ data.plan.title }}</a></p>
+                                <p class="ms">{{ data.comment.content }}</p>
+                                <p class="ms">{{ data.comment.created_time }}</p>
+                                {% elif data.type == 4 %}
+                                <p><a href="{{ userInfo['u_url'] }}">{{ userInfo['nickname'] }}</a>&nbsp;发布了说说:</p>
+                                <p>{{ data.say.content }}</p>
+                                <p class="ms"><a href="/sayfeed/{{data.say.id}}/">查看</a> {{ data.say.created_time }}</p>
+                                {% elif data.type == 5 %}
+                                <p><a href="{{ userInfo['u_url'] }}">{{ userInfo['nickname'] }}</a>&nbsp;评论了说说:</p>
+                                <p>{{ data.say_comment.content }}</p>
+                                <p class="ms"><a href="/sayfeed/{{data.say_comment.say.id}}/">查看</a> {{ data.say_comment.created_time }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% include "web/default/pages.html" %}
+                    </div>
+
+                </div>
+            </div>
+            {% include "web/users/center/right.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

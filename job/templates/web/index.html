@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>计划网-和梦想一起前行</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="sogou_site_verification" content="r8ZUqxARvX"/>
+        <link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="/static/css/style.css" rel="stylesheet" >
+        <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="/static/js/jquery.placeholder.js"></script>
+    </head>
+    <body>
+        <header class="header-nav  navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="row">
+                  <div class=" col-xs-2">
+                      <a href="/" class="navbar-brand">计划网</a>
+                  </div>
+                  <div class="col-xs-10">
+                      <nav class="navbar-collapse" role="navigation">
+                          <div class="row">
+                              <div class="col-xs-4">
+                                  <ul class="nav navbar-nav">
+                                    <li>
+                                        <a href="/index/">计划</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/say/">说说</a>
+                                    </li>
+                                  </ul>
+                              </div>
+
+                              <div class="col-xs-8">
+                                  <div class=" navbar-right">
+                                    <form id="login" class="navbar-form form-inline" role="form" onsubmit="return false;">
+                                        <div class="form-group">
+                                            <input class="form-control" id="email1" type="email" name="email" value="" placeholder="请输入邮箱" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" id="passwd1" type="password" name="passwd" value="" placeholder="请输入密码" />
+                                        </div>
+                                        <input type="hidden"  name="csrf_token" value="{{csrf_token()}}">
+                                        <input type="checkbox" name="remember" value="1">记住我
+                                        &nbsp;<button class="btn btn-success" type="submit">登录</button>
+                                     </form>
+                                     <script>
+                                         $(function(){
+                                            $form = $("#login");
+                                            $reg_email =  /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/
+                                            $email1 = $("#email1");
+                                            $reg_passwd = /^.{6,40}$/,
+                                            $password1 = $("#passwd1");
+
+                                            function check_input(reg,input) {
+                                                if ( ! reg.test( input.val() ) ) {
+                                                    return false;
+                                                }
+                                                return true;
+                                            }
+
+                                            $input = $form.find("input:not(:hidden):not(:checkbox)");
+                                            $input.blur(function(){
+                                                var $id = $(this).attr('id');
+                                                if ( $id == 'email1' ) {
+                                                    if ( ! check_input ($reg_email, $(this))) {
+                                                        $(this).parent().addClass('has-error');
+                                                    } else {
+                                                         $(this).parent().removeClass('has-error');
+                                                    }
+                                                } else if ($id == 'passwd1') {
+                                                    if ( ! check_input ($reg_passwd, $(this))) {
+                                                        $(this).parent().addClass('has-error');
+                                                    } else {
+                                                        $(this).parent().removeClass('has-error');
+                                                    }
+                                                }
+                                            }).keyup(function(){
+                                                $(this).triggerHandler("blur");
+                                            }).focus(function(){
+                                                $(this).triggerHandler("blur");
+                                            })
+
+                                            $form.submit(function(){
+                                                if (! $reg_email.test($email1.val())) {
+                                                   $email1.parent().addClass('has-error');
+                                                   return false;
+                                                }
+
+                                                if (! $reg_passwd.test($password1.val())) {
+                                                    $password1.parent().addClass('has-error');
+                                                    return false;
+                                                }
+
+                                                data = $form.serialize();
+                                                $.ajax({
+                                                    url:'/login',
+                                                    data:data,
+                                                    type:'POST',
+                                                    dataType:'json',
+                                                    success:function(data){
+                                                        if (data.status == 0) {
+                                                            location.href="{{next}}";
+                                                        } else if (data.status == 1) {
+                                                            alert(data.message);
+                                                            $email1.parent().addClass('has-error');
+                                                            $email1.focus();
+
+                                                        }
+                                                    },
+                                                    error:function(){
+                                                        alert('服务器繁忙，请稍后重试！');
+                                                    },
+                                                })
+
+                                            })
+                                         })
+                                     </script>
+                                  </div>
+                              </div>
+                        </div>
+                      </nav>
+                </div>
+
+                </div>
+            </div>
+        </header>
+         <div class="content-top margin-top-50 width-100">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-8 index-des">
+                        <p class="big-title">计划网</p>
+                        <p class="big-des">和梦想一起前行</p>
+                    </div>
+                    <div class="col-xs-4 index-reg">
+                           <form class="form-horizontal" id="form1" role="form" onsubmit="return false;">
+                              <div class="form-group">
+                                <div class="col-xs-10">
+                                  <input type="email" name="email" class="form-control" id="email" placeholder="邮箱" />
+                                  <div class="help-block hide" >
+                                      <p style="color:red;" ></p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <div class="col-xs-10">
+                                  <input type="text" name="nickname" class="form-control" id="nickname" placeholder="昵称" />
+                                  <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <div class="col-xs-10">
+                                  <input type="password" name="passwd" class="form-control" id="passwd" placeholder="密码">
+                                  <div class="help-block hide" >
+                                        <p style="color:red;" ></p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <input type="hidden"  name="csrf_token" value="{{csrf_token()}}" />
+                                <div class="col-xs-offset-7 col-xs-2">
+                                  <button type="submit" class="btn btn-success">注 册</button>
+                                </div>
+                              </div>
+                           </form>
+                           <script>
+                                 $(function(){
+                                    $form1 = $("#form1");
+                                    $reg_email =  /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/
+                                    $email = $form1.find('input[type=email]');
+                                    $nickname = $form1.find('input[name=nickname]');
+                                    $reg_passwd = /^.{6,40}$/;
+                                    $password = $form1.find('input[name=passwd]');
+                                    $reg_nickname = /^.{1,10}$/;
+
+                                    $email_error = '请输入正确的邮箱格式';
+                                    $passwd_error = '密码必须为6-40个字符';
+                                    $nickname_error = '昵称必须为1-10个字符';
+
+                                    function check_input(reg,input) {
+                                        if ( ! reg.test( input.val() ) ) {
+                                            return false;
+                                        }
+                                        return true;
+                                    }
+
+                                    function show_error(obj,error) {
+                                        var errorObj = obj.next('div');
+                                        errorObj.removeClass('hide');
+                                        errorObj.find('p').html(error);
+                                        errorObj.parent().addClass('has-error');
+                                    }
+
+                                    function hide_error(obj) {
+                                        var errorObj = obj.next('div');
+                                        errorObj.addClass('hide');
+                                        errorObj.find('p').html('');
+                                        errorObj.parent().removeClass('has-error');
+                                    }
+
+                                    $input = $form1.find("input:not(:hidden):not(:submit)");
+                                    $input.blur(function(){
+                                        var $id = $(this).attr('id');
+
+                                        if ( $id == 'email' ) {
+                                            if ( ! check_input ($reg_email, $(this))) {
+                                               show_error($(this),$email_error);
+
+
+                                            } else {
+                                                 hide_error($(this));
+                                            }
+                                        } else if ($id == 'passwd') {
+                                            if ( ! check_input ($reg_passwd, $(this))) {
+                                                show_error($(this),$passwd_error);
+                                            } else {
+                                                 hide_error($(this));
+                                            }
+                                        } else if ($id == 'nickname') {
+                                            if ( ! check_input ($reg_nickname, $(this))) {
+                                                show_error($(this), $nickname_error);
+                                            } else {
+                                                hide_error($(this));
+                                            }
+                                        }
+                                    }).keyup(function(){
+                                        $(this).triggerHandler("blur");
+                                    }).focus(function(){
+                                        $(this).triggerHandler("blur");
+                                    })
+
+                                    $form1.submit(function(){
+                                        if (! $reg_email.test($email.val())) {
+                                           show_error($email,$email_error);
+                                           return false;
+                                        }
+
+                                        if (! $reg_nickname.test($nickname.val())) {
+                                            show_error($nickname,$nickname_error);
+                                            return false;
+                                        }
+
+                                        if (! $reg_passwd.test($password.val())) {
+                                            show_error($password,$passwd_error);
+                                            return false;
+                                        }
+
+                                        data = $form1.serialize();
+
+                                        $.ajax({
+                                            url:'/register/',
+                                            data:data,
+                                            type:'POST',
+                                            dataType:'json',
+                                            success:function(data){
+                                                if (data.status == 0) {
+                                                    alert('注册成功!');
+                                                    location.href="/index";
+                                                } else if (data.status == 1) {
+                                                    show_error($email, data.detail);
+                                                }
+                                            },
+                                            error:function(){
+                                                alert('服务器繁忙，请稍后重试！');
+                                            },
+                                        })
+
+                                    })
+                                 })
+                           </script>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="width-100 down-100">
+            <div class="container-fluid">
+                <h2 class="text-center up-down-50">我们是如何做的?</h2>
+
+                <div class="row">
+                    <div class="col-xs-3  text-center">
+                        <h3>创建计划</h3>
+                        <img src="static/image/got.jpg" width="60%">
+                        <!--<p class="text-left">你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</p>-->
+                    </div>
+
+                    <div class="col-xs-3  text-center">
+                        <h3>分享计划</h3>
+                        <img src="static/image/show.jpg" width="60%">
+                        <!--<p class="text-left">你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</p>-->
+                    </div>
+
+                    <div class="col-xs-3  text-center">
+                        <h3>时时跟踪</h3>
+                        <img src="static/image/fllow.jpg" width="60%">
+                        <!--<p class="text-left">你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</p>-->
+                    </div>
+
+                    <div class="col-xs-3  text-center">
+                        <h3>完成目标</h3>
+                        <img src="static/image/finish.jpg" width="60%">
+                        <!--<p class="text-left">你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</p>-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+{% include "web/footer.html" %}
+    </body>
+</html>
